@@ -1,0 +1,28 @@
+version: '3.6'
+
+services:
+        mydatabase:
+                image: postgres
+                volumes:
+                        - db-data:/var/lib/postgresql/data
+                ports: 
+                        - 5432:5432
+
+        mygochain:
+                image: mydockerbuild
+                restart: always
+                depends_on: 
+                        - mydatabase
+                build:
+                        context: .
+                        dockerfile: dockerfile
+                ports:
+                        - 8000:8000
+                environment:
+                        IP: 127.0.0.1
+                        PORT: 8000
+                        POSTGRES_URL: 127.0.0.1
+                        POSTGRES_PASSWORD: mypass
+
+volumes:
+        db-data:
